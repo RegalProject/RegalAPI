@@ -15,9 +15,9 @@ class CustomUser(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="ProfilePics/", blank=True)
-    theme = models.ForeignKey("Theme", on_delete=models.DO_NOTHING, blank=True)
-    background = models.ImageField(upload_to="BackgroundPics/", blank=True)
+    image = models.ImageField(upload_to="ProfilePics/", blank=True, null=True)
+    theme = models.ForeignKey("Theme", on_delete=models.DO_NOTHING, blank=True, null=True)
+    background = models.ImageField(upload_to="BackgroundPics/", blank=True, null=True)
 
     def __str__(self):
         return f"{self.user}'s Profile"
