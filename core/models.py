@@ -30,7 +30,7 @@ class Theme(models.Model):
         return self.name
 
 
-class Donations(models.Model):
+class Donation(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(auto_now_add=True)
     amount = models.IntegerField(blank=False)
