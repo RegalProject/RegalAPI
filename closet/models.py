@@ -33,7 +33,7 @@ class Occasion(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=150, blank=False)
     season = models.CharField(max_length=150, blank=True)
-    image = models.ImageField(upload_to="ItemPics/", Blank=False)
+    image = models.ImageField(upload_to="ItemPics/", blank=False)
     color = models.CharField(max_length=150, blank=True)
     type = models.ForeignKey(Type, on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
