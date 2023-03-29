@@ -10,6 +10,8 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=150, blank=False)
     last_name = models.CharField(max_length=150, blank=False)
 
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number', 'email']
+
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
