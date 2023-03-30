@@ -22,14 +22,9 @@ class Profile(models.Model):
     background = models.ImageField(upload_to="BackgroundPics/", blank=True, null=True)
     slug = models.SlugField(blank=True, db_index=True, unique=True)
 
-    @staticmethod
-    def get_unique_slug(value):
-        slug = slugify(value)
-        return slug
-
     def save(self, *args, **kwargs):
         if not self.slug and self.user:
-            self.slug = self.get_unique_slug(force_str(self.user.username))
+            self.slug = force_str(self.user.username)
         super(Profile, self).save(*args, **kwargs)
 
     def __str__(self):

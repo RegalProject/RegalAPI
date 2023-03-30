@@ -3,8 +3,12 @@ from . import models
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField()
-    
+    username = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_username(obj):
+        return obj.user.username
+
     class Meta:
         model = models.Profile
-        fields = ('id', 'user_id', 'background', 'theme', 'image')
+        fields = ('id', 'user', 'username', 'background', 'theme', 'image', 'slug')

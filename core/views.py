@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.shortcuts import get_object_or_404
 
 from . import serializers
 from . import models
@@ -10,6 +11,10 @@ from closet.models import Wishlist
 class ProfileViewSet(ModelViewSet):
     queryset = models.Profile.objects.all()
     serializer_class = serializers.ProfileSerializer
+
+    def get_object(self, queryset=None, **kwargs):
+        item = self.kwargs.get('pk')
+        return get_object_or_404(models.Profile, slug=item)
 
 
 # make an empty profile after creating a user and set it to the user
