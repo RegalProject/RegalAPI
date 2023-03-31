@@ -1,11 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 
 from . import serializers
 from . import models
-from closet.models import Wishlist
 
 
 class ProfileViewSet(ModelViewSet):
@@ -17,16 +14,4 @@ class ProfileViewSet(ModelViewSet):
         return get_object_or_404(models.Profile, slug=item)
 
 
-# make an empty profile after creating a user and set it to the user
-@receiver(post_save, sender=models.CustomUser)
-def create_profile(sender, instance, created, **kwargs):
-    if created:
-        models.Profile.objects.create(user=instance)
-
-
-# make an empty wishlist after creating a user and set it to the user
-@receiver(post_save, sender=models.CustomUser)
-def create_wishlist(sender, instance, created, **kwargs):
-    if created:
-        Wishlist.objects.create(user=instance)
 

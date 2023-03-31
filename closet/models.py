@@ -51,6 +51,7 @@ class CrawledItem(Item):
 
 class OwnedItem(Item):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    is_public = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.owner}'s {self.name}"
@@ -62,3 +63,11 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f"{self.user}'s Wishlist"
+
+
+class RecommendedItem(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    items = models.ManyToManyField("CrawledItem", blank=True)
+
+    def __str__(self):
+        return f"{self.user}'s Recommended items"

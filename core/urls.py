@@ -1,5 +1,5 @@
 from rest_framework_nested import routers
-from . import views
+from . import views, signals
 
 
 router = routers.DefaultRouter()
