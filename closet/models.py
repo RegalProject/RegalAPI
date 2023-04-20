@@ -34,7 +34,7 @@ class Item(models.Model):
     name = models.CharField(max_length=150, blank=False)
     season = models.CharField(max_length=150, blank=True)
     image = models.ImageField(upload_to="ItemPics/", blank=False)
-    color = models.CharField(max_length=150, blank=True)
+    color = models.CharField(max_length=150, blank=True, null=True)
     type = models.ForeignKey(Type, on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     material = models.ManyToManyField(Material)
@@ -52,6 +52,7 @@ class CrawledItem(Item):
 class OwnedItem(Item):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_public = models.BooleanField(default=False)
+    score = models.IntegerField()
 
     def __str__(self):
         return f"{self.owner}'s {self.name}"
