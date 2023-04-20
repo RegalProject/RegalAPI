@@ -1,9 +1,9 @@
-from django.db.models.signals import post_save
+from django.db import models
 from rest_framework.viewsets import ModelViewSet
-from django.dispatch import receiver
-from django.conf import settings
+
 from . import serializers
 from . import models
+
 
 # show items of each user
 class OwnedItemViewSet(ModelViewSet):
@@ -11,3 +11,19 @@ class OwnedItemViewSet(ModelViewSet):
         return models.OwnedItem.objects.filter(owner=self.request.user)
 
     serializer_class = serializers.OwnedItemSerializer
+
+
+class PublicItemViewSet(ModelViewSet):
+    queryset = models.OwnedItem.objects.filter(is_public=True)
+    # allowed methods
+    http_method_names = ['get']
+
+    serializer_class = serializers.OwnedItemSerializer
+
+
+class CrawledItemViewSet(ModelViewSet):
+    queryset = models.CrawledItem.objects.all()
+    # allowed methods
+    http_method_names = ['get']
+
+    serializer_class = serializers.CrawledItemSerializer
