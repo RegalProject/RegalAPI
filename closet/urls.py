@@ -6,5 +6,6 @@ router.register('ownedItem', views.OwnedItemViewSet, 'ownedItem')
 router.register('publicItem', views.PublicItemViewSet, 'publicItem')
 router.register('crawledItem', views.CrawledItemViewSet, 'crawledItem')
 router.register('ownedItemByPK', views.OwnedItemByPKViewSet, 'ownedItemByPK')
+router.register('recommendeditem', views.RecomendedItemViewSet, 'recommendeditem')
 
 urlpatterns = router.urls

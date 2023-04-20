@@ -43,3 +43,11 @@ class OwnedItemByPKViewSet(ModelViewSet):
         return get_object_or_404(models.OwnedItem, owner__username=item)
 
 
+# show recomended items
+class RecomendedItemViewSet(ModelViewSet):
+    def get_queryset(self):
+        return models.RecommendedItem.objects.filter(user=self.request.user)
+
+    # allowed methods
+    http_method_names = ['get']
+    serializer_class = serializers.RecommendedItemSerializer

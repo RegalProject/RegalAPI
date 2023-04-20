@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from . import models
+from django.shortcuts import get_object_or_404
 
 
 # serializer for items
@@ -40,3 +41,12 @@ class CrawledItemSerializer(ItemSerializer):
         model = models.CrawledItem
         fields = ('id', 'name', 'season', 'image', 'color', 'typename',
                   'brand', 'materials', 'occasions', 'price', 'url')
+
+# serializer for recommended items
+class RecommendedItemSerializer(serializers.ModelSerializer):
+    items = CrawledItemSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = models.RecommendedItem
+        fields = ('id', 'items')
+
