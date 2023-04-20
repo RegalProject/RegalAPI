@@ -14,17 +14,11 @@ class ItemSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_materials(obj):
-        mats = []
-        for material in obj.material.all():
-            mats.append(material.name)
-        return mats
+        return [material.name for material in obj.material.all()]
 
     @staticmethod
     def get_occasions(obj):
-        occasions = []
-        for oc in obj.occasion.all():
-            occasions.append(oc.name)
-        return occasions
+        return [oc.name for oc in obj.occasion.all()]
 
     class Meta:
         model = models.Item
