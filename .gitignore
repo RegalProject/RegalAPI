@@ -4,3 +4,4 @@ Pipfile
 db.sqlite3
 *.jpg
 *.png
+/.idea/
