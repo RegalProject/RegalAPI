@@ -1,5 +1,6 @@
 from django.db import models
 from rest_framework.viewsets import ModelViewSet
+from django.shortcuts import get_object_or_404
 
 from . import serializers
 from . import models
@@ -27,3 +28,18 @@ class CrawledItemViewSet(ModelViewSet):
     http_method_names = ['get']
 
     serializer_class = serializers.CrawledItemSerializer
+
+
+# get a users owned items by username
+class OwnedItemByPKViewSet(ModelViewSet):
+    queryset = models.OwnedItem.objects.all()
+    # allowed methods
+    http_method_names = ['get']
+
+    serializer_class = serializers.OwnedItemSerializer
+
+    def get_object(self, queryset=None, **kwargs):
+        item = self.kwargs.get('pk')
+        return get_object_or_404(models.OwnedItem, owner__username=item)
+
+
