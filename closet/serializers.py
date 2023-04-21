@@ -44,7 +44,24 @@ class CrawledItemSerializer(ItemSerializer):
 # serializer for recommended items
 class RecommendedItemSerializer(serializers.ModelSerializer):
     items = CrawledItemSerializer(many=True, read_only=True)
+    username = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_username(obj):
+        return obj.user.username
 
     class Meta:
         model = models.RecommendedItem
-        fields = ('id', 'user', 'items')
+        fields = ('id', 'user', 'username', 'items')
+
+
+class RecommendedItemByPKSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_username(obj):
+        return obj.user.username
+
+    class Meta:
+        model = models.RecommendedItem
+        fields = ('id', 'user', 'username', 'items')
