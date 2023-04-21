@@ -32,18 +32,17 @@ class CrawledItemViewSet(ModelViewSet):
 
 # get a users owned items by username
 class OwnedItemByPKViewSet(ModelViewSet):
-    # queryset = models.OwnedItem.objects.all()
-    def get_queryset(self):
-        return models.OwnedItem.objects.filter(owner=self.kwargs['pk']).all()
+    queryset = models.OwnedItem.objects.all()
+
     # allowed methods
     http_method_names = ['get']
+    serializer_class = serializers.OwnedItemSerializer
 
-    serializer_class = serializers.OwnedItemSerializer(many=True)
+    def get_serializer(self, *args, **kwargs):
+        return serializers.OwnedItemSerializer(many=True, *args, **kwargs)
 
-    # def get_object(self, queryset=None, **kwargs):
-    #     item = self.kwargs.get('pk')
-    #     # return get_object_or_404(models.OwnedItem, owner__username=item)
-    #     return models.OwnedItem.objects.filter(owner__username=item)
+    def get_object(self):
+        return models.OwnedItem.objects.filter(owner__username=self.kwargs['pk'])
 
 
 # show recommended items
