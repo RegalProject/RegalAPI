@@ -5,3 +5,5 @@ db.sqlite3
 *.jpg
 *.png
 /.idea/
+db.sqlite3
+db.sqlite3
