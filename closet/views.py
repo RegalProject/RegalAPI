@@ -85,5 +85,6 @@ class WishlistByPKViewSet(ModelViewSet):
 
     serializer_class = serializers.WishlistByPKSerializer
 
-    def get_object(self):
-        return models.Wishlist.objects.filter(user=self.kwargs['pk'])
+    def get_object(self, queryset=None, **kwargs):
+        item = self.kwargs.get('pk')
+        return get_object_or_404(models.RecommendedItem, user__username=item)
