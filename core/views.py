@@ -6,10 +6,10 @@ from . import models
 
 
 class ProfileViewSet(ModelViewSet):
+    serializer_class = serializers.ProfileSerializer
+    
     def get_queryset(self):
         return models.Profile.objects.filter(user=self.request.user)
-
-    serializer_class = serializers.ProfileSerializer
 
     def get_object(self, queryset=None, **kwargs):
         item = self.kwargs.get('pk')

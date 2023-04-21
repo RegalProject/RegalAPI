@@ -27,6 +27,11 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class OwnedItemSerializer(ItemSerializer):
+    owner = serializers.SerializerMethodField()
+
+    def get_owner(self):
+        return self.context['user']
+    
     class Meta:
         model = models.OwnedItem
         fields = ('id', 'owner', 'name', 'season', 'image', 'color', 'typename', 'type',
