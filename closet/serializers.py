@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from . import models
-from django.shortcuts import get_object_or_404
 
 
 # serializer for items
@@ -76,8 +75,7 @@ class WishlistSerializer(serializers.ModelSerializer):
 
     def get_user(self):
         return self.context['user']
-           
-        
+
     class Meta:
         model = models.Wishlist
         fields = ('id', 'user', 'items')
