@@ -23,30 +23,28 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Item
-        fields = ('id', 'name', 'season', 'image', 'color', 'typename', 'type', 
-                   'material', 'occasion', 'brand', 'materials', 'occasions')
+        fields = ('id', 'name', 'season', 'image', 'color', 'typename', 'type',
+                  'material', 'occasion', 'brand', 'materials', 'occasions')
 
 
 class OwnedItemSerializer(ItemSerializer):
-
     class Meta:
         model = models.OwnedItem
         fields = ('id', 'owner', 'name', 'season', 'image', 'color', 'typename', 'type',
-                  'material', 'occasion','brand', 'materials', 'occasions', 'is_public', 'score')
+                  'material', 'occasion', 'brand', 'materials', 'occasions', 'is_public', 'score')
 
 
 class CrawledItemSerializer(ItemSerializer):
-
     class Meta:
         model = models.CrawledItem
         fields = ('id', 'name', 'season', 'image', 'color', 'typename', 'type',
-                  'material', 'occasion','brand', 'materials', 'occasions', 'price', 'url')
+                  'material', 'occasion', 'brand', 'materials', 'occasions', 'price', 'url')
+
 
 # serializer for recommended items
 class RecommendedItemSerializer(serializers.ModelSerializer):
     items = CrawledItemSerializer(many=True, read_only=True)
-    
+
     class Meta:
         model = models.RecommendedItem
         fields = ('id', 'user', 'items')
-
