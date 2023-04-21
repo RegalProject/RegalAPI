@@ -8,7 +8,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_username(obj):
         return obj.user.username
+    
 
     class Meta:
         model = models.Profile
-        fields = ('username', 'background', 'theme', 'image')
+        fields = ('user', 'username', 'background', 'theme', 'image')
