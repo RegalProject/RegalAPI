@@ -21,6 +21,11 @@ class OwnedItemByPKViewSet(ModelViewSet):
     # allowed methods
     http_method_names = ['get']
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"user": self.request.user})
+        return context
+    
     def get_serializer(self, *args, **kwargs):
         return serializers.OwnedItemSerializer(many=True, *args, **kwargs)
 

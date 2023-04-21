@@ -4,6 +4,10 @@ from . import models
 
 class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField()
+
+    def get_user(self):
+        return self.context['user']
 
     @staticmethod
     def get_username(obj):
