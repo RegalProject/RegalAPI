@@ -64,4 +64,4 @@ class RecommendedItemByPKViewSet(ModelViewSet):
 
     def get_object(self, queryset=None, **kwargs):
         item = self.kwargs.get('pk')
-        return get_object_or_404(models.RecommendedItem, user__uername=item)
+        return get_object_or_404(models.RecommendedItem, user__username=item)
