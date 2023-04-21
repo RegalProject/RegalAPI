@@ -68,7 +68,6 @@ class RecommendedItemByPKSerializer(serializers.ModelSerializer):
 
 
 class WishlistSerializer(serializers.ModelSerializer):
-    items = CrawledItemSerializer(many=True, read_only=False)
     username = serializers.SerializerMethodField()
 
     @staticmethod

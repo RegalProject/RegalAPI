@@ -72,7 +72,7 @@ class WishlistViewSet(ModelViewSet):
         return models.Wishlist.objects.filter(user=self.request.user)
 
     # allowed methods
-    http_method_names = ['get', 'post', 'delete']
+    http_method_names = ['get', 'patch', 'delete']
 
     serializer_class = serializers.WishlistSerializer
 
