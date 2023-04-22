@@ -46,7 +46,7 @@ class Item(models.Model):
 
 class CrawledItem(Item):
     price = models.IntegerField(blank=False)
-    url = models.URLField(blank=False)
+    url = models.URLField(blank=False, unique=True)
 
 
 class OwnedItem(Item):
