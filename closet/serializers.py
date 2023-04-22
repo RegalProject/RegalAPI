@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from . import models
-from django.shortcuts import get_object_or_404
 
 
 # serializer for items
@@ -28,6 +27,11 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class OwnedItemSerializer(ItemSerializer):
+    owner = serializers.SerializerMethodField()
+
+    def get_owner(self, obj):
+        return self.context['user'].id
+    
     class Meta:
         model = models.OwnedItem
         fields = ('id', 'owner', 'name', 'season', 'image', 'color', 'typename', 'type',
@@ -65,3 +69,22 @@ class RecommendedItemByPKSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.RecommendedItem
         fields = ('id', 'user', 'username', 'items')
+
+
+class WishlistSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        return self.context['user'].id
+
+    class Meta:
+        model = models.Wishlist
+        fields = ('id', 'user', 'items')
+
+
+class WishlistByPKSerializer(serializers.ModelSerializer):
+    items = CrawledItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Wishlist
+        fields = ('id', 'user', 'items')

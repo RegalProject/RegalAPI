@@ -6,11 +6,16 @@ from . import models
 
 
 class ProfileViewSet(ModelViewSet):
+    serializer_class = serializers.ProfileSerializer
+
     def get_queryset(self):
         return models.Profile.objects.filter(user=self.request.user)
-
-    serializer_class = serializers.ProfileSerializer
 
     def get_object(self, queryset=None, **kwargs):
         item = self.kwargs.get('pk')
         return get_object_or_404(models.Profile, slug=item)
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"user": self.request.user})
+        return context
