@@ -8,10 +8,13 @@ from . import serializers
 from . import models
 
 
+class ItemViewSet(ModelViewSet):
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['type','brand', 'material', 'occasion']
+    
 # show items of each user
-class OwnedItemViewSet(ModelViewSet):
+class OwnedItemViewSet(ItemViewSet):
     serializer_class = serializers.OwnedItemSerializer
-    search_fields = ['name__istartswith']
 
     def get_queryset(self):
         return models.OwnedItem.objects.filter(owner=self.request.user)
@@ -22,7 +25,7 @@ class OwnedItemViewSet(ModelViewSet):
         return context
 
 # get a users owned items by username
-class OwnedItemByPKViewSet(ModelViewSet):
+class OwnedItemByPKViewSet(ItemViewSet):
     queryset = models.OwnedItem.objects.all()
     serializer_class = serializers.OwnedItemSerializer
     # allowed methods
@@ -35,14 +38,14 @@ class OwnedItemByPKViewSet(ModelViewSet):
         return models.OwnedItem.objects.filter(owner__username=self.kwargs['pk'])
 
 
-class PublicItemViewSet(ModelViewSet):
+class PublicItemViewSet(ItemViewSet):
     queryset = models.OwnedItem.objects.filter(is_public=True)
     serializer_class = serializers.OwnedItemSerializer
     # allowed methods
     http_method_names = ['get']
 
 
-class CrawledItemViewSet(ModelViewSet):
+class CrawledItemViewSet(ItemViewSet):
     queryset = models.CrawledItem.objects.all()
     serializer_class = serializers.CrawledItemSerializer
     # allowed methods
