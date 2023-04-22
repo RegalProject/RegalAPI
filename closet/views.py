@@ -9,9 +9,10 @@ from . import models
 
 
 class ItemViewSet(ModelViewSet):
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['type','brand', 'material', 'occasion']
-    
+    search_fields = ['name']
+
 # show items of each user
 class OwnedItemViewSet(ItemViewSet):
     serializer_class = serializers.OwnedItemSerializer
