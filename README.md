@@ -15,4 +15,4 @@
 > python manage.py migrate closet
 > python manage.py runserver
 ```
-sever will run on http://localhost:8000
+server will run on http://localhost:8000
