@@ -29,8 +29,8 @@ class ItemSerializer(serializers.ModelSerializer):
 class OwnedItemSerializer(ItemSerializer):
     owner = serializers.SerializerMethodField()
 
-    def get_owner(self):
-        return self.context['user']
+    def get_owner(self, obj):
+        return self.context['user'].id
     
     class Meta:
         model = models.OwnedItem
@@ -74,12 +74,8 @@ class RecommendedItemByPKSerializer(serializers.ModelSerializer):
 class WishlistSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
 
-    @staticmethod
-    def get_username(obj):
-        return obj.user.username
-
-    def get_user(self):
-        return self.context['user']
+    def get_user(self, obj):
+        return self.context['user'].id
 
     class Meta:
         model = models.Wishlist

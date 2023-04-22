@@ -1,6 +1,8 @@
 from django.db import models
-from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import SearchFilter
 
 from . import serializers
 from . import models
@@ -9,10 +11,15 @@ from . import models
 # show items of each user
 class OwnedItemViewSet(ModelViewSet):
     serializer_class = serializers.OwnedItemSerializer
+    search_fields = ['name__istartswith']
 
     def get_queryset(self):
         return models.OwnedItem.objects.filter(owner=self.request.user)
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"user": self.request.user})
+        return context
 
 # get a users owned items by username
 class OwnedItemByPKViewSet(ModelViewSet):
@@ -20,11 +27,6 @@ class OwnedItemByPKViewSet(ModelViewSet):
     serializer_class = serializers.OwnedItemSerializer
     # allowed methods
     http_method_names = ['get']
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context.update({"user": self.request.user})
-        return context
     
     def get_serializer(self, *args, **kwargs):
         return serializers.OwnedItemSerializer(many=True, *args, **kwargs)
