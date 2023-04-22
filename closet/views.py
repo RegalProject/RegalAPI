@@ -10,8 +10,9 @@ from . import models
 
 class ItemViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ['type','brand', 'material', 'occasion']
+    filterset_fields = ['type', 'brand', 'material', 'occasion']
     search_fields = ['name']
+
 
 # show items of each user
 class OwnedItemViewSet(ItemViewSet):
@@ -25,10 +26,12 @@ class OwnedItemViewSet(ItemViewSet):
         context.update({"user": self.request.user})
         return context
 
+
 # get a users owned items by username
 class OwnedItemByPKViewSet(ItemViewSet):
     queryset = models.OwnedItem.objects.all()
     serializer_class = serializers.OwnedItemSerializer
+    filterset_fields = ItemViewSet.filterset_fields + ['is_public']
     # allowed methods
     http_method_names = ['get']
     
@@ -49,11 +52,13 @@ class PublicItemViewSet(ItemViewSet):
 class CrawledItemViewSet(ItemViewSet):
     queryset = models.CrawledItem.objects.all()
     serializer_class = serializers.CrawledItemSerializer
+    filterset_fields = ItemViewSet.filterset_fields + ['price']
     # allowed methods
     http_method_names = ['get', 'post', 'delete', 'put']
 
 
 # show recommended items
+# add filters plz
 class RecommendedItemViewSet(ModelViewSet):
     serializer_class = serializers.RecommendedItemSerializer
     # allowed methods
@@ -87,7 +92,6 @@ class WishlistViewSet(ModelViewSet):
         context.update({"user": self.request.user})
         return context
     
-
 
 class WishlistByPKViewSet(ModelViewSet):
     queryset = models.Wishlist.objects.all()
