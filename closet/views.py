@@ -6,12 +6,19 @@ from rest_framework.filters import SearchFilter
 
 from . import serializers
 from . import models
+from . import filters
+
+
+class ItemViewSet(ModelViewSet):
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_class = filters.ItemFilter
+    search_fields = ['name']
 
 
 # show items of each user
-class OwnedItemViewSet(ModelViewSet):
+class OwnedItemViewSet(ItemViewSet):
     serializer_class = serializers.OwnedItemSerializer
-    search_fields = ['name__istartswith']
+    filterset_class = filters.OwnedItemFilter
 
     def get_queryset(self):
         return models.OwnedItem.objects.filter(owner=self.request.user)
@@ -21,8 +28,9 @@ class OwnedItemViewSet(ModelViewSet):
         context.update({"user": self.request.user})
         return context
 
+
 # get a users owned items by username
-class OwnedItemByPKViewSet(ModelViewSet):
+class OwnedItemByPKViewSet(ItemViewSet):
     queryset = models.OwnedItem.objects.all()
     serializer_class = serializers.OwnedItemSerializer
     # allowed methods
@@ -35,21 +43,23 @@ class OwnedItemByPKViewSet(ModelViewSet):
         return models.OwnedItem.objects.filter(owner__username=self.kwargs['pk'])
 
 
-class PublicItemViewSet(ModelViewSet):
+class PublicItemViewSet(ItemViewSet):
     queryset = models.OwnedItem.objects.filter(is_public=True)
     serializer_class = serializers.OwnedItemSerializer
     # allowed methods
     http_method_names = ['get']
 
 
-class CrawledItemViewSet(ModelViewSet):
+class CrawledItemViewSet(ItemViewSet):
     queryset = models.CrawledItem.objects.all()
     serializer_class = serializers.CrawledItemSerializer
+    filterset_class = filters.CrawledItemFilter
     # allowed methods
     http_method_names = ['get', 'post', 'delete', 'put']
 
 
 # show recommended items
+# add filters plz
 class RecommendedItemViewSet(ModelViewSet):
     serializer_class = serializers.RecommendedItemSerializer
     # allowed methods
@@ -83,7 +93,6 @@ class WishlistViewSet(ModelViewSet):
         context.update({"user": self.request.user})
         return context
     
-
 
 class WishlistByPKViewSet(ModelViewSet):
     queryset = models.Wishlist.objects.all()
