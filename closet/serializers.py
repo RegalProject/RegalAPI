@@ -26,6 +26,50 @@ class ItemSerializer(serializers.ModelSerializer):
                   'material', 'occasion', 'brand', 'materials', 'occasions')
 
 
+class AddByLinkSerializer(serializers.ModelSerializer):
+    owner = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    season = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+    color = serializers.SerializerMethodField()
+    type = serializers.SerializerMethodField()
+    material = serializers.SerializerMethodField()
+    occasion = serializers.SerializerMethodField()
+    brand = serializers.SerializerMethodField()
+
+    def get_owner(self, obj):
+        return self.context['owner']
+
+    def get_name(self, obj):
+        return self.context['crawled'].name
+
+    def get_season(self, obj):
+        return self.context['crawled'].season
+
+    def get_image(self, obj):
+        return self.context['crawled'].image
+
+    def get_color(self, obj):
+        return self.context['crawled'].color
+
+    def get_type(self, obj):
+        return self.context['crawled'].type
+
+    def get_material(self, obj):
+        return self.context['crawled'].material
+
+    def get_occasion(self, obj):
+        return self.context['crawled'].occasion
+
+    def get_brand(self, obj):
+        return self.context['crawled'].brand
+
+    class Meta:
+        model = models.OwnedItem
+        fields = ('id', 'name', 'season', 'image', 'color', 'type', 'material',
+                  'occasion', 'brand', 'owner', 'is_public', 'score')
+
+
 class OwnedItemSerializer(ItemSerializer):
     owner = serializers.SerializerMethodField()
 
