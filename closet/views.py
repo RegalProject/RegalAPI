@@ -6,17 +6,19 @@ from rest_framework.filters import SearchFilter
 
 from . import serializers
 from . import models
+from . import filters
 
 
 class ItemViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ['type', 'brand', 'material', 'occasion']
+    filterset_class = filters.ItemFilter
     search_fields = ['name']
 
 
 # show items of each user
 class OwnedItemViewSet(ItemViewSet):
     serializer_class = serializers.OwnedItemSerializer
+    filterset_class = filters.OwnedItemFilter
 
     def get_queryset(self):
         return models.OwnedItem.objects.filter(owner=self.request.user)
@@ -31,7 +33,6 @@ class OwnedItemViewSet(ItemViewSet):
 class OwnedItemByPKViewSet(ItemViewSet):
     queryset = models.OwnedItem.objects.all()
     serializer_class = serializers.OwnedItemSerializer
-    filterset_fields = ItemViewSet.filterset_fields + ['is_public']
     # allowed methods
     http_method_names = ['get']
     
@@ -52,7 +53,7 @@ class PublicItemViewSet(ItemViewSet):
 class CrawledItemViewSet(ItemViewSet):
     queryset = models.CrawledItem.objects.all()
     serializer_class = serializers.CrawledItemSerializer
-    filterset_fields = ItemViewSet.filterset_fields + ['price']
+    filterset_class = filters.CrawledItemFilter
     # allowed methods
     http_method_names = ['get', 'post', 'delete', 'put']
 
