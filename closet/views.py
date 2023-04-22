@@ -123,7 +123,7 @@ class AddByLinkViewSet(ModelViewSet):
             crawled_serialized = serializers.CrawledItemSerializer(crawled)
         except models.CrawledItem.DoesNotExist:
             return Response({'error': 'The item with this url does not exist in the database.'},
-                            status=status.HTTP_404_NOT_FOUND)
+                            status=status.HTTP_400_BAD_REQUEST)
         # save the item to the owned items and all the attributes
         request.data['owner'] = self.request.user.id
         request.data['name'] = crawled_serialized.data['name']
