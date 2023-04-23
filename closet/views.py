@@ -118,8 +118,7 @@ class AddByLinkViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            # Get the book from the Book table
-            crawled = models.CrawledItem.objects.get(url=self.request.data['url'])
+            crawled = self.queryset.get(url=self.request.data['url'])
             crawled_serialized = serializers.CrawledItemSerializer(crawled)
         except models.CrawledItem.DoesNotExist:
             return Response({'error': 'The item with this url does not exist in the database.'},
