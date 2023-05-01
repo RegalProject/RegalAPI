@@ -16,10 +16,12 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-]
+CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS_ORIGIN_WHITELIST = [
+#     "http://127.0.0.1:3000"
+#     "http://127.0.0.1:3001"
+# ]
 
 
 # Quick-start development settings - unsuitable for production
