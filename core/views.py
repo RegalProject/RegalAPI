@@ -9,6 +9,8 @@ from . import models
 class ProfileViewSet(ModelViewSet):
     serializer_class = serializers.ProfileSerializer
 
+    http_method_names = ['get', 'patch']
+
     def get_queryset(self):
         return models.Profile.objects.filter(user=self.request.user)
 
