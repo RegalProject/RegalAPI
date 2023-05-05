@@ -2,6 +2,7 @@ from django.db import models
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter
@@ -21,6 +22,7 @@ class ItemViewSet(ModelViewSet):
 class OwnedItemViewSet(ItemViewSet):
     serializer_class = serializers.OwnedItemSerializer
     filterset_class = filters.OwnedItemFilter
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return models.OwnedItem.objects.filter(owner=self.request.user)
@@ -67,6 +69,7 @@ class CrawledItemViewSet(ItemViewSet):
 # add filters plz
 class RecommendedItemViewSet(ModelViewSet):
     serializer_class = serializers.RecommendedItemSerializer
+    permission_classes = [IsAuthenticated]
     # allowed methods
     http_method_names = ['get']
 
@@ -87,6 +90,7 @@ class RecommendedItemByPKViewSet(ModelViewSet):
 
 class WishlistViewSet(ModelViewSet):
     serializer_class = serializers.WishlistSerializer
+    permission_classes = [IsAuthenticated]
     # allowed methods
     http_method_names = ['get', 'patch']
 
@@ -113,6 +117,7 @@ class WishlistByPKViewSet(ModelViewSet):
 class AddByLinkViewSet(ModelViewSet):
     serializer_class = serializers.OwnedItemSerializer
     queryset = models.CrawledItem.objects.all()
+    permission_classes = [IsAuthenticated]
     # allowed methods
     http_method_names = ['post']
 
