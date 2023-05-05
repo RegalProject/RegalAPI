@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
 from . import models
@@ -10,6 +11,8 @@ class ProfileViewSet(ModelViewSet):
     serializer_class = serializers.ProfileSerializer
 
     http_method_names = ['get', 'patch']
+
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return models.Profile.objects.filter(user=self.request.user)
