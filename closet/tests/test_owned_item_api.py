@@ -79,6 +79,7 @@ class OwnedItemViewTest(CustomTestCase):
             'is_public': True,
             'score': 100
         })
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_post_owned_item_unauthenticated(self):

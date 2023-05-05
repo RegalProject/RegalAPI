@@ -28,14 +28,17 @@ class OwnedItemViewSet(ItemViewSet):
     def get_queryset(self):
         return models.OwnedItem.objects.filter(owner=self.request.user)
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context.update({"owner": self.request.user})
-        return context
+    # def get_serializer_context(self):
+    #     context = super().get_serializer_context()
+    #     context.update({"owner": self.request.user})
+    #     return context
 
     def create(self, request, *args, **kwargs):
         print(request.user)
-        request.data['owner'] = request.user
+        try:
+            request.data['owner'] = self.request.user.id
+        except AttributeError:
+            pass
 
         if 100 < int(request.data['score']) < 0:
             return Response({'error': 'score must be between 0 and 100'}, status=status.HTTP_400_BAD_REQUEST)
