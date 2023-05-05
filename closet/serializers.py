@@ -8,10 +8,6 @@ class ItemSerializer(serializers.ModelSerializer):
     typename = serializers.SerializerMethodField()
     materials = serializers.SerializerMethodField()
     occasions = serializers.SerializerMethodField()
-    # owner = serializers.SerializerMethodField()
-
-    # def get_owner(self, obj):
-    #     return self.context.get('owner')
 
     @staticmethod
     def get_typename(obj):
@@ -27,7 +23,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Item
-        fields = ('id', 'name', 'owner', 'season', 'image', 'color', 'typename', 'type',
+        fields = ('id', 'name', 'season', 'image', 'color', 'typename', 'type',
                   'material', 'occasion', 'brand', 'materials', 'occasions')
 
 

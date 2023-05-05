@@ -29,11 +29,6 @@ class OwnedItemViewSet(ItemViewSet):
     def get_queryset(self):
         return models.OwnedItem.objects.filter(owner=self.request.user)
 
-    # def get_serializer_context(self):
-    #     context = super().get_serializer_context()
-    #     context.update({"owner": self.request.user})
-    #     return context
-
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
         try:
