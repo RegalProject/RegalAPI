@@ -10,5 +10,6 @@ router.register('recommendedItem', views.RecommendedItemViewSet, 'recommendedIte
 router.register('recommendedItemByPK', views.RecommendedItemByPKViewSet, 'recommendedItemByPK')
 router.register('wishlist', views.WishlistViewSet, 'wishlist')
 router.register('wishlistByPK', views.WishlistByPKViewSet, 'wishlistByPK')
+router.register('addByLink', views.AddByLinkViewSet, 'addByLink')
 
 urlpatterns = router.urls

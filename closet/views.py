@@ -1,6 +1,8 @@
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter
 
@@ -23,10 +25,13 @@ class OwnedItemViewSet(ItemViewSet):
     def get_queryset(self):
         return models.OwnedItem.objects.filter(owner=self.request.user)
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context.update({"user": self.request.user})
-        return context
+    def create(self, request, *args, **kwargs):
+        request.data['owner'] = request.user.id
+
+        if 100 < request.data['score'] < 0:
+            return Response({'error': 'score must be between 0 and 100'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return super(OwnedItemViewSet, self).create(request, *args, **kwargs)
 
 
 # get a users owned items by username
@@ -103,3 +108,30 @@ class WishlistByPKViewSet(ModelViewSet):
     def get_object(self, queryset=None, **kwargs):
         item = self.kwargs.get('pk')
         return get_object_or_404(models.RecommendedItem, user__username=item)
+
+
+class AddByLinkViewSet(ModelViewSet):
+    serializer_class = serializers.OwnedItemSerializer
+    queryset = models.CrawledItem.objects.all()
+    # allowed methods
+    http_method_names = ['post']
+
+    def create(self, request, *args, **kwargs):
+        try:
+            crawled = self.queryset.get(url=self.request.data['url'])
+            crawled_serialized = serializers.CrawledItemSerializer(crawled)
+        except models.CrawledItem.DoesNotExist:
+            return Response({'error': 'The item with this url does not exist in the database.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        # save the item to the owned items and all the attributes
+        request.data['owner'] = self.request.user.id
+        request.data['name'] = crawled_serialized.data['name']
+        request.data['season'] = crawled_serialized.data['season']
+        request.data['image'] = crawled.image
+        request.data['color'] = crawled_serialized.data['color']
+        request.data['type'] = crawled_serialized.data['type']
+        request.data['material'] = crawled_serialized.data['material']
+        request.data['occasion'] = crawled_serialized.data['occasion']
+        request.data['brand'] = crawled_serialized.data['brand']
+
+        return super().create(request, *args, **kwargs)
