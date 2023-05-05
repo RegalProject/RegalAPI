@@ -119,3 +119,17 @@ class OwnedItemViewTest(CustomTestCase):
         url = reverse('ownedItem-detail', args=[1])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class OwnedItemByPKViewTest(CustomTestCase):
+
+    def test_get_owned_item_by_pk_authenticated(self):
+        url = reverse('ownedItemByPK-detail', args=[1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_owned_item_by_pk_unauthenticated(self):
+        self.client.force_authenticate(user=None, token=None)
+        url = reverse('ownedItemByPK-detail', args=[1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
