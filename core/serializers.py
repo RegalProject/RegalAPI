@@ -12,3 +12,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Profile
         fields = ('user', 'username', 'background', 'theme', 'image')
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.CustomUser
+        fields = ('id',)

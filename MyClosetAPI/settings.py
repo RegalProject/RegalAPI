@@ -116,7 +116,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 50,
 }
 
@@ -163,6 +163,7 @@ USE_TZ = True
 
 # use CustomUser as the default user model
 AUTH_USER_MODEL = 'core.CustomUser'
+AUTH_USER_MODEL_SERIALIZER = 'core.serializers.CustomUserSerializer'
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

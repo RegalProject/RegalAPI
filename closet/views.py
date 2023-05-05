@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -27,10 +28,16 @@ class OwnedItemViewSet(ItemViewSet):
     def get_queryset(self):
         return models.OwnedItem.objects.filter(owner=self.request.user)
 
-    def create(self, request, *args, **kwargs):
-        request.data['owner'] = request.user.id
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"owner": self.request.user})
+        return context
 
-        if 100 < request.data['score'] < 0:
+    def create(self, request, *args, **kwargs):
+        print(request.user)
+        request.data['owner'] = request.user
+
+        if 100 < int(request.data['score']) < 0:
             return Response({'error': 'score must be between 0 and 100'}, status=status.HTTP_400_BAD_REQUEST)
 
         return super(OwnedItemViewSet, self).create(request, *args, **kwargs)
