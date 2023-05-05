@@ -1,14 +1,21 @@
 from django.urls import reverse
+from django.conf import settings
 from rest_framework import status
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from closet.tests.custom_test_case import CustomTestCase
 from closet.models import OwnedItem, CrawledItem, Type, Material, Occasion, Brand
+
+
+import os
 
 
 class OwnedItemViewTest(CustomTestCase):
 
     def setUp(self):
         super().setUp()
+
+        self.image_content = open(os.path.join(settings.MEDIA_ROOT, 'ItemPics/download.jpg'), 'rb').read()
 
         self.type = Type.objects.create(name='test type')
         self.brand = Brand.objects.create(name='test brand')
@@ -70,7 +77,11 @@ class OwnedItemViewTest(CustomTestCase):
         response = self.client.post(url, {
             'name': 'test',
             'season': 'Spring',
-            'image': 'test.jpg',
+            'image': SimpleUploadedFile(
+                'test.jpg',
+                content=self.image_content,
+                content_type='image/jpeg'
+            ),
             'color': 'test blue',
             'type': 1,
             'material': [1],
@@ -79,7 +90,6 @@ class OwnedItemViewTest(CustomTestCase):
             'is_public': True,
             'score': 100
         })
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_post_owned_item_unauthenticated(self):

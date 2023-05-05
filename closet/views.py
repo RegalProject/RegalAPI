@@ -34,16 +34,20 @@ class OwnedItemViewSet(ItemViewSet):
     #     return context
 
     def create(self, request, *args, **kwargs):
-        print(request.user)
+        data = request.data.copy()
         try:
-            request.data['owner'] = self.request.user.id
+            data['owner'] = self.request.user.id
         except AttributeError:
-            pass
+            print(request.user)
 
-        if 100 < int(request.data['score']) < 0:
+        if 100 < int(data['score']) < 0:
             return Response({'error': 'score must be between 0 and 100'}, status=status.HTTP_400_BAD_REQUEST)
 
-        return super(OwnedItemViewSet, self).create(request, *args, **kwargs)
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 # get a users owned items by username
