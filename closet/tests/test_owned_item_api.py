@@ -12,9 +12,7 @@ import os
 
 class OwnedItemViewTest(CustomTestCase):
 
-    def setUp(self):
-        super().setUp()
-
+    def post_setUp(self):
         self.image_content = open(os.path.join(settings.MEDIA_ROOT, 'ItemPics/download.jpg'), 'rb').read()
 
         self.type = Type.objects.create(name='test type')
@@ -38,6 +36,10 @@ class OwnedItemViewTest(CustomTestCase):
 
         self.owned_item.material.set([self.material1, self.material2])
         self.owned_item.occasion.set([self.occasion1, self.occasion2])
+
+    def setUp(self):
+        super().setUp()
+        self.post_setUp()
 
     def test_get_owned_item_authenticated(self):
         url = reverse('ownedItem-list')
@@ -133,3 +135,33 @@ class OwnedItemByPKViewTest(CustomTestCase):
         url = reverse('ownedItemByPK-detail', args=[1])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class PublicItemViewTest(CustomTestCase):
+
+    def setUp(self):
+        super().setUp()
+        OwnedItemViewTest.post_setUp(self)
+
+    def test_get_public_item_authenticated(self):
+        url = reverse('publicItem-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_public_item_unauthenticated(self):
+        self.client.force_authenticate(user=None, token=None)
+        url = reverse('publicItem-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_public_item_detail_authenticated(self):
+        url = reverse('publicItem-detail', args=[1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_public_item_detail_unauthenticated(self):
+        self.client.force_authenticate(user=None, token=None)
+        url = reverse('publicItem-detail', args=[1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
