@@ -120,6 +120,13 @@ class WishlistViewSet(ModelViewSet):
         context = super().get_serializer_context()
         context.update({"user": self.request.user})
         return context
+
+    # override list method to return the users wishlist
+    def list(self, request, *args, **kwargs):
+        wishlist = get_object_or_404(self.get_queryset(), user=self.request.user)
+        serializer = self.get_serializer(wishlist)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     # append item to the users wishlist
     def create(self, request, *args, **kwargs):
         wishlist = self.get_queryset().item
