@@ -26,24 +26,30 @@ class OwnedItemViewSet(ItemViewSet):
     filterset_class = filters.OwnedItemFilter
     permission_classes = [IsAuthenticated]
 
+    # allowed methods
+    http_method_names = ['get', 'post', 'delete', 'patch']
+
     def get_queryset(self):
         return models.OwnedItem.objects.filter(owner=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        try:
-            data['owner'] = self.request.user.id
-        except AttributeError:
-            print(request.user)
 
-        if 100 < int(data['score']) < 0:
+        if not 100 >= int(request.data['score']) >= 0:
             return Response({'error': 'score must be between 0 and 100'}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return super().create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        return serializer.save(owner=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        if 'score' in request.data:
+            if not 100 >= int(request.data['score']) >= 0:
+                return Response({'error': 'score must be between 0 and 100'}, status=status.HTTP_400_BAD_REQUEST)
+        return super().update(request, *args, **kwargs)
+
+    def perform_update(self, serializer):
+        return serializer.save(owner=self.request.user)
 
 
 # get a users owned items by username
@@ -105,7 +111,7 @@ class WishlistViewSet(ModelViewSet):
     serializer_class = serializers.WishlistSerializer
     permission_classes = [IsAuthenticated]
     # allowed methods
-    http_method_names = ['get', 'patch']
+    http_method_names = ['get', 'post']
 
     def get_queryset(self):
         return models.Wishlist.objects.filter(user=self.request.user)
@@ -114,6 +120,17 @@ class WishlistViewSet(ModelViewSet):
         context = super().get_serializer_context()
         context.update({"user": self.request.user})
         return context
+    # append item to the users wishlist
+    def create(self, request, *args, **kwargs):
+        wishlist = self.get_queryset().item
+        data = dict()
+        data['user'] = self.request.user.id
+        data['item'] = wishlist.append(self.request.data['item'])
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        wishlist.add(self.request.data['item'])
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
 class WishlistByPKViewSet(ModelViewSet):

@@ -31,7 +31,8 @@ class OwnedItemSerializer(ItemSerializer):
 
     class Meta:
         model = models.OwnedItem
-        fields = ItemSerializer.Meta.fields + ('owner', 'is_public', 'score')
+        fields = ItemSerializer.Meta.fields + ('is_public', 'score')
+        read_only_fields = ('owner',)
 
 
 class CrawledItemSerializer(ItemSerializer):
