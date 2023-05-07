@@ -193,3 +193,37 @@ class AddByLinkViewSet(ModelViewSet):
         request.data['brand'] = crawled_serialized.data['brand']
 
         return super().create(request, *args, **kwargs)
+
+
+class FilterParamViewSet(ModelViewSet):
+    def retrieve(self, request, *args, **kwargs):
+        return Response({'error': 'only list allowed'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TypeViewSet(FilterParamViewSet):
+    queryset = models.Type.objects.all()
+    serializer_class = serializers.TypeSerializer
+    # allowed methods
+    http_method_names = ['get', 'post']
+
+
+class BrandViewSet(FilterParamViewSet):
+    queryset = models.Brand.objects.all()
+    serializer_class = serializers.BrandSerializer
+    # allowed methods
+    http_method_names = ['get', 'post']
+
+
+class MaterialViewSet(FilterParamViewSet):
+    queryset = models.Material.objects.all()
+    serializer_class = serializers.MaterialSerializer
+    # allowed methods
+    http_method_names = ['get', 'post']
+
+
+class OccasionViewSet(FilterParamViewSet):
+    queryset = models.Occasion.objects.all()
+    serializer_class = serializers.OccasionSerializer
+    # allowed methods
+    http_method_names = ['get', 'post']
+

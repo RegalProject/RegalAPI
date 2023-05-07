@@ -11,5 +11,9 @@ router.register('recommendedItemByPK', views.RecommendedItemByPKViewSet, 'recomm
 router.register('wishlist', views.WishlistViewSet, 'wishlist')
 router.register('wishlistByPK', views.WishlistByPKViewSet, 'wishlistByPK')
 router.register('addByLink', views.AddByLinkViewSet, 'addByLink')
+router.register('type', views.TypeViewSet, 'type')
+router.register('brand', views.BrandViewSet, 'brand')
+router.register('material', views.MaterialViewSet, 'material')
+router.register('occasion', views.OccasionViewSet, 'occasion')
 
 urlpatterns = router.urls

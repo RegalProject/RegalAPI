@@ -3,6 +3,30 @@ from django.contrib.auth import get_user_model
 from . import models
 
 
+class TypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Type
+        fields = ('id', 'name')
+
+
+class BrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Brand
+        fields = ('id', 'name')
+
+
+class MaterialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Material
+        fields = ('id', 'name')
+
+
+class OccasionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Occasion
+        fields = ('id', 'name')
+
+
 # serializer for items
 class ItemSerializer(serializers.ModelSerializer):
     typename = serializers.SerializerMethodField()
@@ -39,20 +63,6 @@ class CrawledItemSerializer(ItemSerializer):
     class Meta:
         model = models.CrawledItem
         fields = ItemSerializer.Meta.fields + ('price', 'url')
-
-
-# serializer for recommended items
-# class RecommendedItemSerializer(serializers.ModelSerializer):
-#     items = CrawledItemSerializer(many=True, read_only=True)
-#     username = serializers.SerializerMethodField()
-#
-#     @staticmethod
-#     def get_username(obj):
-#         return obj.user.username
-#
-#     class Meta:
-#         model = models.RecommendedItem
-#         fields = ('id', 'user', 'username', 'items')
 
 
 class RecommendedItemByPKSerializer(serializers.ModelSerializer):
