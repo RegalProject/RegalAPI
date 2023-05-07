@@ -63,6 +63,11 @@ class OwnedItemViewTest(CustomTestCase):
         response = self.client.patch(url, {'score': 50})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_patch_owned_item_score_range(self):
+        url = reverse('ownedItem-detail', args=[1])
+        response = self.client.patch(url, {'score': 150})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_delete_owned_item_authenticated(self):
         url = reverse('ownedItem-detail', args=[1])
         response = self.client.delete(url)
