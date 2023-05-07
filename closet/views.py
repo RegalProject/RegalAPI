@@ -91,8 +91,7 @@ class RecommendedItemViewSet(ItemViewSet):
     http_method_names = ['get']
 
     def get_queryset(self):
-        recommended_items = models.RecommendedItem.objects.get(user=self.request.user)
-        return recommended_items.items.all()
+        return models.RecommendedItem.objects.get(user=self.request.user).items.all()
 
 
 class RecommendedItemByPKViewSet(ModelViewSet):
@@ -106,38 +105,56 @@ class RecommendedItemByPKViewSet(ModelViewSet):
         return get_object_or_404(models.RecommendedItem, user__username=item)
 
 
-class WishlistViewSet(ModelViewSet):
+class WishlistViewSet(ItemViewSet):
     serializer_class = serializers.WishlistSerializer
+    filterset_class = filters.CrawledItemFilter
     permission_classes = [IsAuthenticated]
     # allowed methods
-    http_method_names = ['get', 'post']
+    http_method_names = ['get', 'post', 'delete']
 
     def get_queryset(self):
-        return models.Wishlist.objects.filter(user=self.request.user)
+        return models.Wishlist.objects.get(user=self.request.user).items.all()
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context.update({"user": self.request.user})
-        return context
-
-    # override list method to return the users wishlist
     def list(self, request, *args, **kwargs):
-        wishlist = get_object_or_404(self.get_queryset(), user=self.request.user)
-        serializer = self.get_serializer(wishlist)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = serializers.CrawledItemSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = serializers.CrawledItemSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = serializers.CrawledItemSerializer(instance)
+        return Response(serializer.data)
+
+    def get_object(self):
+        return self.get_queryset().get(pk=self.kwargs['pk'])
 
     # append item to the users wishlist
     def create(self, request, *args, **kwargs):
-        wishlist = self.get_queryset().item
+        wishlist = models.Wishlist.objects.get(user=self.request.user)
         data = dict()
         data['user'] = self.request.user.id
-        data['item'] = wishlist.append(self.request.data['item'])
+        data['items'] = []
+        data['items'].extend(self.request.data['items'])
 
-        serializer = self.get_serializer(data=data)
+        serializer = serializers.WishlistSerializer(data=data)
         serializer.is_valid(raise_exception=True)
-        wishlist.add(self.request.data['item'])
+        wishlist.items.add(data['items'][0])
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
+    def destroy(self, request, *args, **kwargs):
+        wishlist = models.Wishlist.objects.get(user=self.request.user)
+
+        instance = self.get_object()
+
+        wishlist.items.remove(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class WishlistByPKViewSet(ModelViewSet):
     queryset = models.Wishlist.objects.all()
