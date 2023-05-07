@@ -1,9 +1,7 @@
 from django.db import models
-from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
-from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -85,15 +83,16 @@ class CrawledItemViewSet(ItemViewSet):
 
 
 # show recommended items
-# add filters plz
-class RecommendedItemViewSet(ModelViewSet):
-    serializer_class = serializers.RecommendedItemSerializer
+class RecommendedItemViewSet(ItemViewSet):
+    serializer_class = serializers.CrawledItemSerializer
+    filterset_class = filters.CrawledItemFilter
     permission_classes = [IsAuthenticated]
     # allowed methods
     http_method_names = ['get']
 
     def get_queryset(self):
-        return models.RecommendedItem.objects.filter(user=self.request.user)
+        recommended_items = models.RecommendedItem.objects.get(user=self.request.user)
+        return recommended_items.items.all()
 
 
 class RecommendedItemByPKViewSet(ModelViewSet):
