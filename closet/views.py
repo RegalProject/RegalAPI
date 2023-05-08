@@ -163,8 +163,8 @@ class WishlistByPKViewSet(ModelViewSet):
     http_method_names = ['get']
 
     def get_object(self, queryset=None, **kwargs):
-        item = self.kwargs.get('pk')
-        return get_object_or_404(models.RecommendedItem, user__username=item)
+        user = self.kwargs.get('pk')
+        return get_object_or_404(models.Wishlist, user__username=user)
 
 
 class AddByLinkViewSet(ModelViewSet):
