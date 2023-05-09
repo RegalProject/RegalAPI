@@ -169,4 +169,3 @@ class PublicItemViewTest(CustomTestCase):
         url = reverse('publicItem-detail', args=[1])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-

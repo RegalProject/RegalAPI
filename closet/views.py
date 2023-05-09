@@ -53,7 +53,6 @@ class OwnedItemViewSet(ItemViewSet):
 # get a users owned items by username
 class OwnedItemByPKViewSet(ItemViewSet):
     queryset = models.OwnedItem.objects.all()
-    serializer_class = serializers.OwnedItemSerializer
     # allowed methods
     http_method_names = ['get']
     
@@ -62,6 +61,9 @@ class OwnedItemByPKViewSet(ItemViewSet):
 
     def get_object(self):
         return models.OwnedItem.objects.filter(owner__username=self.kwargs['pk'])
+
+    def list(self, request, *args, **kwargs):
+        return Response({'error': 'list not allowed'}, status.HTTP_400_BAD_REQUEST)
 
 
 class PublicItemViewSet(ItemViewSet):
