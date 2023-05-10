@@ -20,9 +20,12 @@ from django.conf.urls.static import static
 from rest_framework.schemas import get_schema_view
 from django.views.generic import TemplateView
 
+from core.views import CustomTokenObtainPairView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
+    path('auth/jwt/create', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/', include('djoser.urls.jwt')),
     path('core/', include('core.urls')),
     path('closet/', include('closet.urls')),

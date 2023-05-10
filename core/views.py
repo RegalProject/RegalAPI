@@ -4,8 +4,14 @@ from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from . import serializers
 from . import models
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = serializers.CustomTokenObtainPairSerializer
 
 
 class ProfileViewSet(ModelViewSet):
