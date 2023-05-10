@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 from . import serializers
 from . import models
@@ -34,3 +35,13 @@ class ProfileViewSet(ModelViewSet):
         self.perform_update(serializer)
 
         return Response(serializer.data)
+
+
+class UserListView(ModelViewSet):
+    queryset = models.CustomUser.objects.all()
+    serializer_class = serializers.CustomUserSerializer
+
+    http_method_names = ['get']
+
+    def get_object(self):
+        return Response({'error': 'only list request allowed'}, status=status.HTTP_400_BAD_REQUEST)

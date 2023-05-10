@@ -59,8 +59,8 @@ class OwnedItemByPKViewSet(ItemViewSet):
     def get_serializer(self, *args, **kwargs):
         return serializers.OwnedItemSerializer(many=True, *args, **kwargs)
 
-    def get_object(self):
-        return models.OwnedItem.objects.filter(owner__username=self.kwargs['pk'])
+    # def get_object(self):
+    #     return models.OwnedItem.objects.filter(owner__username=self.kwargs['pk'])
 
     def list(self, request, *args, **kwargs):
         return Response({'error': 'list not allowed'}, status.HTTP_400_BAD_REQUEST)
@@ -102,9 +102,9 @@ class RecommendedItemByPKViewSet(ModelViewSet):
     # allowed methods
     http_method_names = ['get', 'put']
 
-    def get_object(self, queryset=None, **kwargs):
-        item = self.kwargs.get('pk')
-        return get_object_or_404(models.RecommendedItem, user__username=item)
+    # def get_object(self, queryset=None, **kwargs):
+    #     item = self.kwargs.get('pk')
+    #     return get_object_or_404(models.RecommendedItem, user__username=item)
 
 
 class WishlistViewSet(ItemViewSet):
@@ -164,9 +164,9 @@ class WishlistByPKViewSet(ModelViewSet):
     # allowed methods
     http_method_names = ['get']
 
-    def get_object(self, queryset=None, **kwargs):
-        user = self.kwargs.get('pk')
-        return get_object_or_404(models.Wishlist, user__username=user)
+    # def get_object(self, queryset=None, **kwargs):
+    #     user = self.kwargs.get('pk')
+    #     return get_object_or_404(models.Wishlist, user__username=user)
 
 
 class AddByLinkViewSet(ModelViewSet):
