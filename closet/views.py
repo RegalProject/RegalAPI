@@ -12,13 +12,13 @@ from . import models
 from . import filters
 
 
+# abstract class
 class ItemViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = filters.ItemFilter
     search_fields = ['name']
 
 
-# show items of each user
 class OwnedItemViewSet(ItemViewSet):
     serializer_class = serializers.OwnedItemSerializer
     filterset_class = filters.OwnedItemFilter
@@ -59,8 +59,8 @@ class OwnedItemByPKViewSet(ItemViewSet):
     def get_serializer(self, *args, **kwargs):
         return serializers.OwnedItemSerializer(many=True, *args, **kwargs)
 
-    # def get_object(self):
-    #     return models.OwnedItem.objects.filter(owner__username=self.kwargs['pk'])
+    def get_object(self):
+        return models.OwnedItem.objects.filter(owner__id=self.kwargs['pk'])
 
     def list(self, request, *args, **kwargs):
         return Response({'error': 'list not allowed'}, status.HTTP_400_BAD_REQUEST)
@@ -84,7 +84,6 @@ class CrawledItemViewSet(ItemViewSet):
     http_method_names = ['get', 'post', 'delete', 'put']
 
 
-# show recommended items
 class RecommendedItemViewSet(ItemViewSet):
     serializer_class = serializers.CrawledItemSerializer
     filterset_class = filters.CrawledItemFilter
@@ -96,15 +95,12 @@ class RecommendedItemViewSet(ItemViewSet):
         return models.RecommendedItem.objects.get(user=self.request.user).items.all()
 
 
+# get and put users recommended items by username
 class RecommendedItemByPKViewSet(ModelViewSet):
     queryset = models.RecommendedItem.objects.all()
     serializer_class = serializers.RecommendedItemByPKSerializer
     # allowed methods
-    http_method_names = ['get', 'put']
-
-    # def get_object(self, queryset=None, **kwargs):
-    #     item = self.kwargs.get('pk')
-    #     return get_object_or_404(models.RecommendedItem, user__username=item)
+    http_method_names = ['get', 'patch']
 
 
 class WishlistViewSet(ItemViewSet):
@@ -158,15 +154,12 @@ class WishlistViewSet(ItemViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# get a users wishlist by username
 class WishlistByPKViewSet(ModelViewSet):
     queryset = models.Wishlist.objects.all()
     serializer_class = serializers.WishlistByPKSerializer
     # allowed methods
     http_method_names = ['get']
-
-    # def get_object(self, queryset=None, **kwargs):
-    #     user = self.kwargs.get('pk')
-    #     return get_object_or_404(models.Wishlist, user__username=user)
 
 
 class AddByLinkViewSet(ModelViewSet):
@@ -197,6 +190,7 @@ class AddByLinkViewSet(ModelViewSet):
         return super().create(request, *args, **kwargs)
 
 
+# abstract class
 class FilterParamViewSet(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         return Response({'error': 'only list allowed'}, status=status.HTTP_400_BAD_REQUEST)
@@ -228,4 +222,3 @@ class OccasionViewSet(FilterParamViewSet):
     serializer_class = serializers.OccasionSerializer
     # allowed methods
     http_method_names = ['get', 'post']
-
