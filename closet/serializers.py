@@ -32,10 +32,15 @@ class ItemSerializer(serializers.ModelSerializer):
     typename = serializers.SerializerMethodField()
     materials = serializers.SerializerMethodField()
     occasions = serializers.SerializerMethodField()
+    brandname = serializers.SerializerMethodField()
 
     @staticmethod
     def get_typename(obj):
         return obj.type.name
+
+    @staticmethod
+    def get_brandname(obj):
+        return obj.brand.name
 
     @staticmethod
     def get_materials(obj):
@@ -48,7 +53,7 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Item
         fields = ('id', 'name', 'season', 'image', 'color', 'typename', 'type',
-                  'material', 'occasion', 'brand', 'materials', 'occasions')
+                  'material', 'occasion', 'brand', 'materials', 'occasions', 'brandname')
 
 
 class OwnedItemSerializer(ItemSerializer):
