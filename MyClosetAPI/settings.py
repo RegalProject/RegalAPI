@@ -113,9 +113,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 50,
 }
 
 SIMPLE_JWT = {
@@ -161,6 +166,7 @@ USE_TZ = True
 
 # use CustomUser as the default user model
 AUTH_USER_MODEL = 'core.CustomUser'
+AUTH_USER_MODEL_SERIALIZER = 'core.serializers.CustomUserSerializer'
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -179,7 +185,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -192,7 +198,8 @@ CORS_ORIGIN_WHITELIST = (
     "http://localhost:3000",
     "http://127.0.0.1:3001",
     "https://localhost:3000",
-    "https://127.0.0.1:3001"
+    "https://127.0.0.1:3001",
+    "http://192.168.137.183:8000"
 )
 
 CORS_ALLOW_HEADERS = [

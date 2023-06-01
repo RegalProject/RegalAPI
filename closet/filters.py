@@ -1,6 +1,7 @@
 from django_filters.rest_framework import FilterSet
 from . import models
 
+
 class ItemFilter(FilterSet):
     class Meta:
         model = models.Item
@@ -11,10 +12,12 @@ class ItemFilter(FilterSet):
             'occasion': ['exact'],
         }
 
+
 class CrawledItemFilter(ItemFilter):
     class Meta:
         model = models.CrawledItem
         fields = {'price': ['gt', 'lt'], **ItemFilter.Meta.fields}
+
 
 class OwnedItemFilter(ItemFilter):
     class Meta:
