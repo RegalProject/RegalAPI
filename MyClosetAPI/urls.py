@@ -37,6 +37,7 @@ urlpatterns = [
         template_name='docs.html',
         extra_context={'schema_url': 'api_schema'}
     ), name='swagger-ui'),
+    path('payment/', include('payment.urls'), name='payment'),
 
 ]
 
