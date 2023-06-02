@@ -17,7 +17,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class ProfileViewSet(ModelViewSet):
     serializer_class = serializers.ProfileSerializer
 
-    http_method_names = ['get', 'put']
+    http_method_names = ['get', 'patch']
 
     permission_classes = [IsAuthenticated]
 
@@ -33,6 +33,13 @@ class ProfileViewSet(ModelViewSet):
         context.update({"user": self.request.user})
         return context
 
+    def partial_update(self, request, pk):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        print(serializer.data)
+        return Response(serializer.data)
 
 
 class UserListView(ModelViewSet):
