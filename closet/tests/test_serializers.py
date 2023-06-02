@@ -1,10 +1,6 @@
-# import essential modules
-from django.conf import settings
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from closet import models, serializers
-
-import os
 
 
 class SerializerTest(TestCase):
@@ -18,7 +14,6 @@ class SerializerTest(TestCase):
             last_name='user',
             phone_number='1234567890'
         )
-        self.image_content = open(os.path.join(settings.MEDIA_ROOT, 'ItemPics/download.jpg'), 'rb').read()
 
         self.type = models.Type.objects.create(name='test type')
         self.brand = models.Brand.objects.create(name='test brand')
