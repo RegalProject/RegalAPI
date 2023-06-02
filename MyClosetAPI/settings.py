@@ -153,6 +153,34 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
+DJOSER = {
+    'LOGIN_FIELD': 'username',
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'USERNAME_RESET_CONFIRM_RETYPE': True,
+
+    'SERIALIZERS': {
+        'user_create': 'core.serializers.CustomCreateUserSerializer',
+        'user': 'core.serializers.CustomCreateUserSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    },
+    # 'SEND_CONFIRMATION_EMAIL': True,
+    # 'SET_PASSWORD_RETYPE': True,
+    # 'SET_USERNAME_RETYPE': True,
+    # # 'EMAIL': {
+    # #     'activation': 'core.email.ActivationEmail'
+    # # },
+
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -218,3 +246,11 @@ CORS_ALLOW_HEADERS = [
     "Access-Control-Allow-Credentials"
     "Access-Control-Allow-Methods"
 ]
+
+# setup email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'regal.noreply@gmail.com'
+EMAIL_HOST_PASSWORD = 'iekquxzmtxfkhekh'
+EMAIL_USE_TLS = True
