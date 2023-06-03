@@ -33,7 +33,7 @@ class ProfileViewSet(ModelViewSet):
         context.update({"user": self.request.user})
         return context
 
-    def partial_update(self, request, pk):
+    def partial_update(self, request, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -50,3 +50,19 @@ class UserListView(ModelViewSet):
 
     def get_object(self):
         return Response({'error': 'only list request allowed'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CustomUserEditViewSet(ModelViewSet):
+
+    serializer_class = serializers.CustomUserEditSerializer
+
+    http_method_names = ['get', 'patch']
+
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return models.CustomUser.objects.filter(id=self.request.user.id)
+
+    def get_object(self, queryset=None, **kwargs):
+        item = self.kwargs.get('pk')
+        return get_object_or_404(self.get_queryset(), username=item)

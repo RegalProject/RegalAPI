@@ -44,3 +44,10 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CustomUser
         fields = ('id',)
+
+
+class CustomUserEditSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.CustomUser
+        fields = ('first_name', 'last_name', 'phone_number', 'email')
