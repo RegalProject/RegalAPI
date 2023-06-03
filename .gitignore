@@ -1,3 +1,8 @@
 
 *.lock
 Pipfile
+db.sqlite3
+*.png
+/.idea/
+*.pyc
+/media/
